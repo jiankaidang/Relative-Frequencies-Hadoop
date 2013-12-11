@@ -1,0 +1,26 @@
+- the input/output format in each Hadoop task, i.e., the keys for the mappers and reducers
+
+    Stripes:
+        Mapper<LongWritable, Text, Text, Text>
+            input:
+                key: the position in the file
+                value: the line of text
+            output:
+                key: a
+                value: b:1,c:2,d:5,e:3,f:2
+        Reducer<Text, Text, Text, Text>
+            input:
+                key: a
+                value: b:1,c:2,d:5,e:3,f:2
+            output:
+                key: a
+                value: b
+
+- the Hadoop cluster setting you used, i.e., number of mappers and reducers
+
+    Stripes:
+        number of mappers: 8
+        number of reducers: 1
+
+- the running time for run.sh
+    14 hours
