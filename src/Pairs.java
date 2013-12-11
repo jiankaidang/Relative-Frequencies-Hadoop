@@ -11,7 +11,6 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.TreeSet;
 
 /**
@@ -73,30 +72,22 @@ public class Pairs {
 
     public static class Reduce extends Reducer<Text, Text, Text, Text> {
         TreeSet<Pair> priorityQueue = new TreeSet<>();
+        double totalCount = 0;
 
         public void reduce(Text key, Iterable<Text> values, Context context)
                 throws IOException, InterruptedException {
-            java.util.Map<String, Integer> stripe = new HashMap<>();
-            double totalCount = 0;
             String keyStr = key.toString();
+            int count = 0;
 
             for (Text value : values) {
-                String[] stripes = value.toString().split(",");
-
-                for (String termCountStr : stripes) {
-                    String[] termCount = termCountStr.split(":");
-                    String term = termCount[0];
-                    int count = Integer.parseInt(termCount[1]);
-
-                    Integer countSum = stripe.get(term);
-                    stripe.put(term, (countSum == null ? 0 : countSum) + count);
-
-                    totalCount += count;
-                }
+                count += Integer.parseInt(value.toString());
             }
 
-            for (java.util.Map.Entry<String, Integer> entry : stripe.entrySet()) {
-                priorityQueue.add(new Pair(entry.getValue() / totalCount, keyStr, entry.getKey()));
+            if (keyStr.matches(".*\\*")) {
+                totalCount = count;
+            } else {
+                String[] pair = keyStr.split(",");
+                priorityQueue.add(new Pair(count / totalCount, pair[0], pair[1]));
 
                 if (priorityQueue.size() > 100) {
                     priorityQueue.pollFirst();
