@@ -6,10 +6,9 @@ output_directory=$3
 
 #Use AWS CLI to copy jar files to input_s3 (S3)
 aws s3 cp hadoop-relative-frequencies.jar $input_s3/
-aws s3 cp wikitext_500.txt $input_s3/
 
 startStripes=$(date +%s)
-elastic-mapreduce -j $myflow_id --jar $input_s3/hadoop-relative-frequencies.jar --arg Stripes --arg s3://jiankaidang --arg wikitext_500.txt --arg $output_directory
+elastic-mapreduce -j $myflow_id --jar $input_s3/hadoop-relative-frequencies.jar --arg Stripes --arg s3://cs9223 --arg wikitext_500000.txt --arg $output_directory
 elastic-mapreduce -j $myflow_id --wait-for-steps
 timeStripes=$(expr $(date +%s) - $startStripes)
 
