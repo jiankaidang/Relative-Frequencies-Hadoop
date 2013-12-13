@@ -16,11 +16,31 @@
                 key: a
                 value: b
 
+    Pairs:
+        Mapper<LongWritable, Text, Text, Text>
+            input:
+                key: the position in the file
+                value: the line of text
+            output:
+                key: a, * or a, b1 or a, b2
+                value: n
+        Reducer<Text, Text, Text, Text>
+            input:
+                key: a, * or a, b1 or a, b2
+                value: n
+            output:
+                key: a
+                value: b
+
 - the Hadoop cluster setting you used, i.e., number of mappers and reducers
 
     Stripes:
         number of mappers: 8
         number of reducers: 1
 
+    Stripes:
+        number of mappers: 8
+        number of reducers: 1
+
 - the running time for run.sh
-    14 hours
+    2 days, 7 hours
